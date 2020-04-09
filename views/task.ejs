@@ -1,0 +1,36 @@
+<h1 class="mt-4">Tasks</h1>
+
+<div class="container bg-light text-dark">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        <% for (var i = 0; i < table.length ; i++) { %>
+        <tr>
+            <td> <%= table[i].title %></td>
+            <td><button id="attempt" type="button" class="btn btn-primary"> Attempt Task </button></td>
+        </tr>
+        <% }; %>
+        </tbody>
+    </table>
+</div>
+
+<button id="complete" type="button" class="btn btn-primary" data-toggle="modal" data-target="#conmpleteModal"> Tasks Completed </button>
+
+<div class="modal fade" id="conmpleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p> Are you sure you have completed all tasks? </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button id="confirm" type="button" class="btn btn-primary" onclick="window.location = '../experiments'; " >Confirm</button>
+        </div>
+      </div>
+    </div>
+</div>
