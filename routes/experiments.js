@@ -38,7 +38,7 @@ router.get('/', ensureAuthenticated, (req,res) => {
 router.get('/:id', ensureAuthenticated, (req,res) => {
 
     Experiment.findOne({ id : req.params.id }, function(err, doc) {
-
+        doc.task->randomise;
         if (err) throw err;
         else {     
         }
