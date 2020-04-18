@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated } = require('../config/auth');
+const helper = require('../helper/helper')
 
 //User model
 const Experiment = require('../models/Experiment');
@@ -38,13 +39,12 @@ router.get('/', ensureAuthenticated, (req,res) => {
 router.get('/:id', ensureAuthenticated, (req,res) => {
 
     Experiment.findOne({ id : req.params.id }, function(err, doc) {
-
         if (err) throw err;
         else {     
         }
         res.render('task', {
             name : req.user.name,
-            table : doc.tasks
+            table : helper.shuffle(doc.tasks)
         })
     });
     
