@@ -81,3 +81,31 @@ router.get('/post', (req,res) => {
     });
 
 module.exports = router;
+
+//GET DETAIL TASK
+router.get('/', ensureAuthenticated, (req,res) => {
+    //array with items to send
+    var items = [];
+
+    Task.find({ status : 'open' }, function(err, docs) {
+
+        if (err) throw err;
+        else {
+            for(var entry of docs) {
+                items.push({
+                    'id' : entry.id,
+                    'title' : entry.title,
+                    'description' : entry.description,
+                    'status' : entry.status
+                });
+            }
+        }
+        res.render('dashboard', {
+            name : req.user.name,
+            table : items
+        })
+    });
+
+
+    
+});
