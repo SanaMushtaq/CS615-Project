@@ -50,6 +50,7 @@ app.use((req, res, next)=> {
 
 
 //ROUTES
+// https://www.website.com
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/experiments', require('./routes/experiments'));

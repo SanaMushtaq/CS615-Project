@@ -12,7 +12,7 @@
         <% for (var i = 0; i < table.length ; i++) { %>
         <tr>
             <td> <%= table[i].title %></td>
-            <td><button id="attempt" type="button" class="btn btn-primary"> Attempt Task </button></td>
+            <td><a class="btn btn-primary" href="/experiments/<%= expID  %>/task/<%= table[i].title %>" >Attempt Task </a></td>
         </tr>
         <% }; %>
         </tbody>

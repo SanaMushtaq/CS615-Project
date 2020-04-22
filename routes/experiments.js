@@ -7,11 +7,14 @@ const helper = require('../helper/helper')
 const Experiment = require('../models/Experiment');
 
 //GET EXPERIMENTS
+// www.sdassa.com/experiments/
 router.get('/', ensureAuthenticated, (req,res) => {
     //array with items to send
     var items = [];
 
-    Experiment.find({ status : 'open' }, function(err, docs) {
+    Experiment.find({status: 'open'}, )
+
+    Experiment.find({ status : 'open' }, function (err, docs){
 
         if (err) throw err;
         else {
@@ -25,26 +28,33 @@ router.get('/', ensureAuthenticated, (req,res) => {
                 });
             }
         }
+
         res.render('dashboard', {
             name : req.user.name,
             table : items
         })
-    });
+    }
+    
+    );
 
 
     
 });
 
-//GET TASKS
+//GET experiement -> view/task.ejs SOME STUPID NAMING HERE
+// www.asdasd.com/exp/1232112
 router.get('/:id', ensureAuthenticated, (req,res) => {
 
-    Experiment.findOne({ id : req.params.id }, function(err, doc) {
+    Experiment.findOne({ id : req.params.id }, (err, doc) => {
+
+        console.log(doc.tasks);
+
         if (err) throw err;
-        else {     
-        }
+
         res.render('task', {
             name : req.user.name,
-            table : helper.shuffle(doc.tasks)
+            table : helper.shuffle(doc.tasks), // table: tasks, stupid naming again.
+            expID : req.params.id
         })
     });
     
@@ -81,3 +91,38 @@ router.get('/post', (req,res) => {
     });
 
 module.exports = router;
+
+//GET DETAIL TASK -> taskdetail.ejs
+// www.asdasa.com/exp/4/task/123
+router.get('/:expid/task/:taskname', ensureAuthenticated, (req,res) => {
+    
+    console.log(req.params);
+
+    const expid = req.params.expid;
+    const taskname = req.params.taskname;
+
+    Experiment.findOne({ id : expid }, (err, doc) => {
+        if (err) throw err;
+
+        for (const task of doc.tasks) {
+            if (task.title === taskname) {
+                return res.render('taskdetail', {
+                    task,
+                    expid: expid
+                })
+            }
+        }
+
+        // when reaching this line, it means we have not found this taskname associate with this expID. 
+        // render error page if exists or throw error.
+
+        // throw new Error("no such askname associate with this expID")
+        res.render('errorpage', {
+            message: "no such askname associate with this expID"
+        })
+        
+    });
+
+
+    
+});
