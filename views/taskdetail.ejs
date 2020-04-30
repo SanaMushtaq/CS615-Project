@@ -1,19 +1,4 @@
 <h1 class="mt-4"><%= task.title %> of <%= expid %></h1>
-<html>
-<body>
-
-<p>Once you click "Start". The time limit is 10 seconds.</p>
-
-<button onclick="setTimeout(myFunction, 10000);">Attempt</button>
-
-<script>
-function myFunction() {
-  alert('Your session has ended');
-}
-</script>
-
-</body>
-</html>
 <div class="container bg-light text-dark">
     <table class="table table-striped">
         <thead>
@@ -23,7 +8,24 @@ function myFunction() {
             </tr>
     </table>
 
-    <div>Do task1, task2, task3, and task4 within 10 seconds. Return to Experiment page after the time limit or upon completion</div>
+    <div>Do the following within 10 seconds. Submit and return to the experiment page after the time limit or upon completion.</div>
+    <html>
+
+
+<body>
+
+<p>Once you click "Start". The time limit is 10 seconds.</p>
+
+<button onclick="setTimeout(myFunction, 10000);">Start</button>
+
+<script>
+function myFunction() {
+  alert('Your time has ended, please submit.');
+}
+</script>
+
+</body>
+</html>
     <div><pre>
         Perform 1
         Perform 2
