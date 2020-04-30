@@ -7,7 +7,6 @@ const helper = require('../helper/helper')
 const Experiment = require('../models/Experiment');
 
 //GET EXPERIMENTS
-// www.sdassa.com/experiments/
 router.get('/', ensureAuthenticated, (req,res) => {
     //array with items to send
     var items = [];
@@ -41,8 +40,7 @@ router.get('/', ensureAuthenticated, (req,res) => {
     
 });
 
-//GET experiement -> view/task.ejs SOME STUPID NAMING HERE
-// www.asdasd.com/exp/1232112
+//GET experiement ->
 router.get('/:id', ensureAuthenticated, (req,res) => {
 
     Experiment.findOne({ id : req.params.id }, (err, doc) => {
@@ -53,7 +51,7 @@ router.get('/:id', ensureAuthenticated, (req,res) => {
 
         res.render('task', {
             name : req.user.name,
-            table : helper.shuffle(doc.tasks), // table: tasks, stupid naming again.
+            table : helper.shuffle(doc.tasks), 
             expID : req.params.id
         })
     });
@@ -92,8 +90,7 @@ router.get('/post', (req,res) => {
 
 module.exports = router;
 
-//GET DETAIL TASK -> taskdetail.ejs
-// www.asdasa.com/exp/4/task/123
+//GET DETAIL TASK -> 
 router.get('/:expid/task/:taskname', ensureAuthenticated, (req,res) => {
     
     console.log(req.params);
