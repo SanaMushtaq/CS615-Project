@@ -47,7 +47,7 @@
   $(document).ready(function(){
     $(document).on("click", ".open-expDialog", function () {
       var expId = $(this).data('title');
-      $(".modal-footer #confirm").attr( "onclick", "window.location = 'experiments/"+expId+"';"  );
+      $(".modal-footer #confirm").attr( "onclick", "window.location = '../experiments/"+expId+"';"  );
     });
   })
   </script>
