@@ -14,7 +14,12 @@
         <tr>
             <td><%- entry.title %></td>
             <td><%- entry.description %></td>
-            <td><button id="attempt" type="button" class="open-expDialog btn btn-primary" data-toggle="modal" data-target="#confirmModal" data-title="<%= entry.id %>" >Attempt Experiment <%= entry.id  %></button></td>
+            <td><button onclick="myFunction()" id="attempt" type="button" class="open-expDialog btn btn-primary" data-toggle="modal" data-target="#confirmModal" data-title="<%= entry.id %>" >Attempt Experiment <%= entry.id  %></button></td>
+            <script>
+              function myFunction() {
+                document.getElementById("attempt").disabled = true;
+              }
+              </script>
         </tr>
         <% }); %>
         </tbody>
