@@ -1,7 +1,5 @@
 <h1 class="mt-4">Dashboard</h1>
 
-<% var expID %>
-
 <div class="container bg-light text-dark">
     <table class="table table-striped">
         <thead>
@@ -16,8 +14,7 @@
         <tr>
             <td><%- entry.title %></td>
             <td><%- entry.description %></td>
-            <% expID = entry.id %>
-            <td><button id="attempt" type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal" data-expID="<%= expID %>" >Attempt Experiment <%= entry.id  %></button></td>
+            <td><button id="attempt" type="button" class="open-expDialog btn btn-primary" data-toggle="modal" data-target="#confirmModal" data-title="<%= entry.id %>" >Attempt Experiment <%= entry.id  %></button></td>
         </tr>
         <% }); %>
         </tbody>
@@ -38,11 +35,19 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <%= console.log(expID);  %>
-          <button id="confirm" type="button" class="btn btn-primary" data-value="<%= expID  %>" target="_top" onclick="window.location = 'experiments/<%= expID  %>' ">Confirm</button>
+          <button id="confirm" type="button" class="btn btn-primary" target="_top" onclick="">Confirm</button>
         </div>
       </div>
     </div>
 </div>
 
 <a href="/users/logout" class="btn btn-secondary">Logout</a>
+
+<script type="text/javascript">  
+  $(document).ready(function(){
+    $(document).on("click", ".open-expDialog", function () {
+      var expId = $(this).data('title');
+      $(".modal-footer #confirm").attr( "onclick", "window.location = 'experiments/"+expId+"';"  );
+    });
+  })
+  </script>
