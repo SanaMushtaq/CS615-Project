@@ -1,4 +1,4 @@
-<h1 class="mt-4"><%= task.title %> of <%= expid %></h1>
+<h1 id="heading" data-title="<%= task.id %>" class="mt-4"><%= task.id %> of <%= expid %></h1>
 <div class="container bg-light text-dark">
     <table class="table table-striped">
         <thead>
@@ -18,25 +18,33 @@
 
 <button onclick="setTimeout(myFunction, 10000);">Start</button>
 
-<script>
-function myFunction() {
-  alert('Your time has ended, please submit.');
-}
-</script>
-
 </body>
+
 </html>
     <div><pre>
-        Perform 1
-        Perform 2
-        Perform 3
-        Perform 4
+        <%= task.description %>
     </pre></div>
 
-<button id="confirm" type="button" class="btn btn-primary" onclick="window.location = '../tasks'; " >Submit</button>
+    <button id="confirm" type="button" class="btn btn-primary" onclick="window.location = '../tasks'; " >Submit</button>
     
 </div>
 
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var taskID = $('#heading').data('title');
+        if (window.sessionStorage) {
+            sessionStorage.setItem("taskID", taskID);
+        }
+    })
+
+    function myFunction(){
+        alert('Your time is finished');
+    }
+  </script>
 
 
 

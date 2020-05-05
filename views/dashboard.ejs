@@ -1,58 +1,69 @@
 <h1 class="mt-4">Dashboard</h1>
 
 <div class="container bg-light text-dark">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        <% table.forEach(function(entry){ %>
-        <tr>
-            <td><%- entry.title %></td>
-            <td><%- entry.description %></td>
-            <td><button onclick="myFunction()" id="attempt" type="button" class="open-expDialog btn btn-primary" data-toggle="modal" data-target="#confirmModal" data-title="<%= entry.id %>" >Attempt Experiment <%= entry.id  %></button></td>
-            <script>
-              function myFunction() {
-                document.getElementById("attempt").disabled = true;
-              }
-              </script>
-        </tr>
-        <% }); %>
-        </tbody>
-    </table>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% table.forEach(function(entry){ %>
+      <tr>
+        <td><%- entry.title %></td>
+        <td><%- entry.description %></td>
+        <td><button id="attempt" type="button" class="open-expDialog btn btn-primary" data-toggle="modal"
+            data-target="#confirmModal" data-title="<%= entry.id %>">Attempt Experiment <%= entry.id  %></button></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
 </div>
 
-<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p> Do you want to proceed with the experiment? <br /> Caution: Each experiment can be attempted only once.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button id="confirm" type="button" class="btn btn-primary" target="_top" onclick="">Confirm</button>
-        </div>
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p> Do you want to proceed with the experiment? <br /> Caution: Each experiment can be attempted only once.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="confirm" type="button" class="btn btn-primary" target="_top" onclick="">Confirm</button>
       </div>
     </div>
+  </div>
 </div>
 
 <a href="/users/logout" class="btn btn-secondary">Logout</a>
 
-<script type="text/javascript">  
-  $(document).ready(function(){
-    $(document).on("click", ".open-expDialog", function () {
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    console.log("Here here here");
+    $(document).on("click",".open-expDialog", function () {
+      console.log("Here here");
       var expId = $(this).data('title');
-      $(".modal-footer #confirm").attr( "onclick", "window.location = '../experiments/"+expId+"';"  );
+      $('#confirm').click( function() {
+        openTask(expId);
+      });
+      //$(".modal-footer #confirm").attr("onclick", openTask(expId));
     });
+    
   })
-  </script>
+
+  function openTask(expId) {
+    window.location.replace('http://localhost:3000/experiments/' + expId + '/tasks');
+    //"window.location = '../experiments/"+expId+"/tasks';"
+  }
+</script>

@@ -8,40 +8,11 @@ const Experiment = require('../models/Experiment');
 
 //GET EXPERIMENTS
 router.get('/', ensureAuthenticated, (req,res) => {
-    //array with items to send
-    var items = [];
-
-    Experiment.find({status: 'open'}, )
-
-    Experiment.find({ status : 'open' }, function (err, docs){
-
-        if (err) throw err;
-        else {
-            for(var entry of docs) {
-                items.push({
-                    'id' : entry.id,
-                    'title' : entry.title,
-                    'description' : entry.description,
-                    'tasks' : entry.tasks,
-                    'status' : entry.status
-                });
-            }
-        }
-
-        res.render('dashboard', {
-            name : req.user.name,
-            table : items
-        })
-    }
-    
-    );
-
-
-    
+    getExperiments(req, res);
 });
 
-//GET experiement ->
-router.get('/:id', ensureAuthenticated, (req,res) => {
+//GET experiment ->
+router.get('/:id/tasks', ensureAuthenticated, (req,res) => {
 
     Experiment.findOne({ id : req.params.id }, (err, doc) => {
 
@@ -58,40 +29,8 @@ router.get('/:id', ensureAuthenticated, (req,res) => {
     
 }); 
 
-//POST EXPERIMENT
-router.get('/post', (req,res) => {
-    const {id, title, description, tasks, status} = req.body;
-
-    Experiment.findOne({ title : title})
-        .then(experiment => {
-            if (experiment) {
-                errors.push({ msg: 'Experiment already exist!'})
-                res.render('dashboard', {
-                    errors,
-                    title,
-                    description,
-                    status
-                });
-            }
-            else {
-                const newExperiment = new Experiment({
-                    id,
-                    title,
-                    description,
-                    tasks,
-                    status
-                });
-                newExperiment.save()
-                    .then(experiment => req.flash('success_msg', 'Saved Successfully'))
-                    .catch(err => console.log(err));
-            }
-        });
-    });
-
-module.exports = router;
-
 //GET DETAIL TASK -> 
-router.get('/:expid/task/:taskname', ensureAuthenticated, (req,res) => {
+router.get('/:expid/tasks/:taskname', ensureAuthenticated, (req,res) => {
     
     console.log(req.params);
 
@@ -102,7 +41,7 @@ router.get('/:expid/task/:taskname', ensureAuthenticated, (req,res) => {
         if (err) throw err;
 
         for (const task of doc.tasks) {
-            if (task.title === taskname) {
+            if (task.id === taskname) {
                 return res.render('taskdetail', {
                     task,
                     expid: expid
@@ -112,14 +51,65 @@ router.get('/:expid/task/:taskname', ensureAuthenticated, (req,res) => {
 
         // when reaching this line, it means we have not found this taskname associate with this expID. 
         // render error page if exists or throw error.
-
-        // throw new Error("no such askname associate with this expID")
-        res.render('errorpage', {
-            message: "no such askname associate with this expID"
-        })
         
     });
+});
 
+//UPDATE DASHBOARD
+router.put('/:id', ensureAuthenticated, (req, res) => {
+    var myquery = { id: req.params.id }; 
+    var newValues = { $set: {status: "close", modifiedAt : Date.now()} };
+
+    Experiment.findOneAndUpdate(myquery, newValues, (err, res) => {
+        if (err) throw err;
+        console.log(res);
+    });
+
+    req.url = '/';
+    req.method = 'GET';
+    //req.query = '';
+    getExperiments(req, res);
+
+});
+
+function getExperiments(req, res) {
+
+    console.log('req.url: '+req.url + req.method);
+    //console('res.url: '+res);
+    const { page, perPage } = req.query;
+    const options = {
+        page: parseInt(page, 10) || 0,
+        perPage: parseInt(perPage, 10) || 10,
+      };
 
     
-});
+    //array with items to send
+    var items = [];
+    count = Experiment.countDocuments();
+
+    Experiment.find({ status : 'open'})
+    .skip(options.page * options.perPage)
+    .limit(options.perPage)
+    .exec((err, docs) => {
+        if (err) throw err;
+        else {
+            //docs = Experiment.paginate({}, options);
+            for(var entry of docs) {
+                items.push({
+                    'id' : entry.id,
+                    'title' : entry.title,
+                    'description' : entry.description,
+                    'tasks' : entry.tasks,
+                    'status' : entry.status
+                });
+            }
+
+            res.render('dashboard', {
+                name : req.user.name,
+                table : items
+            });
+        }   
+    })
+}
+
+module.exports = router;

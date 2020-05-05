@@ -1,25 +1,28 @@
 <h1 class="mt-4">Tasks</h1>
 
 <div class="container bg-light text-dark">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Task</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        <% for (var i = 0; i < table.length ; i++) { %>
-        <tr>
-            <td> <%= table[i].title %></td>
-            <td><button id="complete" type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"> Attempt Task </button></td>
-        </tr>
-        <% }; %>
-        </tbody>
-    </table>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (var i = 0; i < table.length ; i++) { %>
+      <tr>
+        <td> <%= table[i].description %></td>
+        <td><button id="<%= table[i].id %>" data-title="<%= table[i].id %>" type="button"
+            class="confirmTask btn btn-primary active" data-toggle="modal" data-target="#confirmModal">
+            Attempt Task </button></td>
+      </tr>
+      <% }; %>
+    </tbody>
+  </table>
 </div>
 
-<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -33,28 +36,91 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="okay" type="button" class="btn btn-primary" target="_top" onclick="">Confirm</button>
         <%= console.log(expID);  %>
-        <% for (var j = 1; j < table.length; j++) { %>
-          <a class="btn btn-primary" href="/experiments/<%= expID  %>/task/<%= table[j].title %>" > Confirm </a>
-        <% }; %>
+        <!--<% for (var j = 1; j < table.length; j++) { %> -->
+        <!--<a class="btn btn-primary" > Confirm </a> -->
+        <!--<% }; %> -->
       </div>
     </div>
   </div>
 </div>
 
-<button id="complete" type="button" class="btn btn-primary" data-toggle="modal" data-target="#conmpleteModal"> Tasks Completed </button>
+<button id="completeExp" type="button" class="open-expDialog btn btn-primary" data-toggle="modal"
+  data-target="#completeModal" data-title="<%= expID %>"> Tasks Completed </button>
 
-<div class="modal fade" id="conmpleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-body">
-          <p> Are you sure you have completed all tasks? </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button id="confirm" type="button" class="btn btn-primary" onclick="window.location = '../'; " >Confirm</button>
-        </div>
+<div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p> Are you sure you have completed all tasks? </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="confirmExp" type="button" class="btn btn-primary">Confirm</button>
       </div>
     </div>
+  </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    console.log("Here here here");
+
+    if (window.sessionStorage) {
+      if (sessionStorage.getItem("taskID") == null) {
+        //$('button').attr("title", taskID).addClass("active");
+      } else {
+        var taskID = "#"+sessionStorage.getItem("taskID");
+        console.log(taskID);
+        $(''+taskID).attr("disabled", true);
+        //$('button').attr("title", taskID).addClass("disabled");
+        sessionStorage.setItem("taskID", null);
+      };
+    }
+
+    $(".confirmTask").on("click", function () {
+      var taskID = $(this).data('title');
+      var url = window.location.href;
+      url = url + '/' + taskID;
+      console.log("Here here " + url);
+      $('#okay').click(function () {
+        redirect(url);
+      });
+      //$(".model-footer #okay").on("click", redirect(url)); 
+    });
+
+    function redirect(url) {
+      console.log(url);
+      window.location.href = url;
+    }
+    var experimentId = '';
+    /* $(".open-expDialog").on("click", function () {
+      var expID = $(this).data('title');
+      $("#confirmExp").on("click", updateExp(expID));
+    }); */
+    $(".open-expDialog").on("click", function () {
+      experimentId = $(this).data('title');
+    });
+    $("#confirmExp").on("click", function () { updateExp(experimentId) });
+
+    function updateExp(expID) {
+      console.log("here: " + expID);
+      $.ajax({
+        type: 'PUT',
+        url: `/experiments/${expID}`
+      }).done(function (response) {
+        console.log(response);
+        window.location.replace('http://localhost:3000/experiments/ ');
+      }).fail(function (response) {
+        console.log("Oops not working");
+      });
+    }
+  })
+
+</script>

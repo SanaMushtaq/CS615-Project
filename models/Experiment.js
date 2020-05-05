@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate'); 
 
 const ExperimentSchema = new mongoose.Schema({
     id: {
@@ -21,11 +22,17 @@ const ExperimentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    date: {
+    createdAt: {
         type: Date,
         default: Date.now
     },
+    modifiedAt: {
+        type: Date,
+        default: Date.now
+    }
 });
+
+ExperimentSchema.plugin(mongoosePaginate); 
 
 const Experiment = mongoose.model('Experiment', ExperimentSchema);
 
